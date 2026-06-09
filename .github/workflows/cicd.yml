@@ -58,6 +58,34 @@ jobs:
         run: npm test
 
 
+      ##################################################
+      # Install Snyk
+      ##################################################
+
+
+      - name: Install Snyk
+        run: npm install -g snyk
+
+
+      ##################################################
+      # Authenticate Snyk
+      ##################################################
+
+
+      - name: Snyk Auth
+        run: snyk auth ${{ secrets.SNYK_TOKEN }}
+
+
+      ##################################################
+      # Run Security Scan
+      ##################################################
+
+
+      - name: Snyk Scan
+        working-directory: .
+        run: snyk test --severity-threshold=medium
+
+
       ## Deploy to Vercel ##
 
 
@@ -75,12 +103,13 @@ jobs:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
 
-
-
       - name: Deploy Project to Vercel
         run: |
           vercel deploy --prod --yes \
             --token=${{ secrets.VERCEL_TOKEN }}
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }} 
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+
+
